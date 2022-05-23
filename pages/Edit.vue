@@ -21,6 +21,8 @@
 </template>
 
 <script>
+import {db} from "../plugins/firebase";
+import { collection, getDocs, deleteDoc, doc, onSnapshot, getDoc, query, where,updateDoc, addDoc,orderBy, limit,} from 'firebase/firestore';
 export default {
   name: "Edit.vue",
   data() {
@@ -30,6 +32,25 @@ export default {
       content:"",
     }
   },
+  methods:{
+    async getNote(){
+      const docRef = doc(db, 'todos', this.$route.params.id);
+      const docSnapshot = await getDoc(docRef);
+      this.title = docSnapshot.data().title;
+      this.content = docSnapshot.data().content;
+    },
+    async EditPost(){
+      const docRef = doc(db, 'todos', this.$route.params.id);
+      await updateDoc(docRef, { title:this.title,content:this.content });
+      alert("Edit thành công");
+    }
+  },
+  created() {
+    console.log(this.$route.params.id)
+  },
+  mounted() {
+    this.getNote();
+  }
 }
 </script>
 
